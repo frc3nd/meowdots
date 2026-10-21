@@ -188,8 +188,12 @@ default_mode = "minimal"
 [background]
 # # Five types: "default" (built-in dot-grid — the default), "shader", "tile",
 # # "wallpaper", "none". For shader/tile/wallpaper, `path` is the source.
+
+# type = "none"
+
 type = "shader"
-path = "~/.config/driftwm/border.glsl"
+path = "~/work/meowdots/.tmp/border.glsl"
+
 # # Example:
 # # type = "shader"  # procedural GLSL (scrolls with canvas)
 # # path = "/usr/local/share/driftwm/wallpapers/animated/fast_smoke.glsl"
