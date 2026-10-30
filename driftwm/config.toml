@@ -184,7 +184,9 @@ animate_fps = 0
 "mod+c" = "close-window"
 "mod+shift+q" = "none"
 "mod+f" = "fit-window-snapped"
-"mod+e" = "exec dolphin"
+
+"mod+e" = "none"
+
 "mod+a" = "home-toggle"
 "mod+m" = "none"
 "mod+shift+m" = "none"
