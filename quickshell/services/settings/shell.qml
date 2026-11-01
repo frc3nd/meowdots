@@ -1,66 +1,122 @@
-// testing
-
 import Quickshell
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
+import "../logger" as Logs
 
 FloatingWindow {
     id: settings
 
-    title: "meowdots settings"
-	implicitWidth: 700
-	implicitHeight: 450
-    color: "transparent"
+    signal closeRequested()
 
-    property bool isPreview: false
+    title: "meowdots settings"
+    implicitWidth: 780
+    implicitHeight: 480
+    color: "#1e1e2e"
+
+    property string currentTab: "main"
+    property bool wasVisible: false
 
     onVisibleChanged: {
-        if (!visible) Qt.quit()
+        if (visible) wasVisible = true
+        else if (wasVisible) closeRequested()
     }
 
-    Rectangle {
-        id: background
-        anchors.fill: parent
-        color: "#1e1e2e"
-        opacity: settings.isPreview ? 0.0 : 1.0
+    // Created and destroyed with the settings window.
+    Logs.LogReader { id: logger }
 
-        Behavior on opacity {
-            NumberAnimation { duration: 200 }
+    RowLayout {
+        anchors.fill: parent
+        spacing: 0
+
+        Rectangle {
+            Layout.preferredWidth: 180
+            Layout.fillHeight: true
+            color: "#181825"
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 12
+                spacing: 8
+
+                Text {
+                    text: "meowdots"
+                    color: "#cdd6f4"
+                    font.bold: true
+                    font.pixelSize: 16
+                    Layout.bottomMargin: 12
+                }
+
+                SidebarTab { label: "главная"; tab: "main" }
+                Item { Layout.fillHeight: true }
+                SidebarTab { label: "консоль"; tab: "console" }
+            }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Item {
+                anchors.fill: parent
+                visible: settings.currentTab === "main"
+            }
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 16
+                spacing: 10
+                visible: settings.currentTab === "console"
+
+                Text {
+                    text: "логи Quickshell"
+                    color: "#cdd6f4"
+                    font.bold: true
+                }
+
+                ScrollView {
+                    id: logScroll
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+
+                    TextArea {
+                        readOnly: true
+                        selectByMouse: true
+                        text: logger.history || "ожидание логов…"
+                        color: "#cdd6f4"
+                        font.family: "monospace"
+                        font.pixelSize: 11
+                        wrapMode: TextEdit.WrapAnywhere
+                        background: Rectangle { color: "#11111b"; radius: 8 }
+
+                        onTextChanged: cursorPosition = length
+                    }
+                }
+            }
         }
     }
 
-	Rectangle {
-	    id: toggle
-	    anchors.centerIn: parent
-	    width: 52
-	    height: 30
-	    radius: height / 2
-	    
-	    color: settings.isPreview ? "#cba6f7" : "#313244"
-	    border.width: settings.isPreview ? 0 : 2
-	    border.color: "#45475a"
+    component SidebarTab: Rectangle {
+        required property string label
+        required property string tab
 
-	    Behavior on color { ColorAnimation { duration: 200 } }
+        Layout.fillWidth: true
+        Layout.preferredHeight: 36
+        radius: 8
+        color: settings.currentTab === tab ? "#313244" : "transparent"
 
-	    Rectangle {
-	        id: thumb
-	        width: 20
-	        height: 20
-	        radius: height / 2
-	        anchors.verticalCenter: parent.verticalCenter
-	        
-	        x: settings.isPreview ? (toggle.width - width - 5) : 5
-	        color: settings.isPreview ? "#11111b" : "#a6adc8"
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 12
+            text: label
+            color: settings.currentTab === tab ? "#cba6f7" : "#a6adc8"
+        }
 
-	        Behavior on x { 
-	            NumberAnimation { duration: 200; easing.type: Easing.OutCubic } 
-	        }
-	    }
-
-	    MouseArea {
-	        anchors.fill: parent
-	        cursorShape: Qt.PointingHandCursor
-	        onClicked: settings.isPreview = !settings.isPreview
-	    }
-	}
+        MouseArea {
+            anchors.fill: parent
+            onClicked: settings.currentTab = tab
+        }
+    }
 }

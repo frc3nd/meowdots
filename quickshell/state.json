@@ -1,0 +1,14 @@
+{
+  "global_theme": "default",
+
+  "driftwm": {
+    "theme_override": null,
+    "enabled_modules": [
+      "example.qml"
+    ]
+  },
+
+  "hyprland": {
+
+  }
+}

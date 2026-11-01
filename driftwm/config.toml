@@ -6,7 +6,8 @@ window_placement = "auto"
 focus_placement = "center"
 
 autostart = [
-	'hyprlock'
+	'hyprlock',
+	'qs --log-rules qt.qpa.wayland.textinput.warning=false'
 ]
 
 [session]
@@ -181,6 +182,8 @@ animate_fps = 0
 [keybindings]
 "mod+q" = "exec-terminal"
 "mod+d" = "exec rofi -show drun"
+"mod+i" = "exec qs ipc call settings open"
+"mod+shift+o" = "exec qs ipc call modules toggle example.qml"
 "mod+c" = "close-window"
 "mod+shift+q" = "none"
 "mod+f" = "fit-window-snapped"
