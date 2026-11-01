@@ -8,8 +8,8 @@ FloatingWindow {
     id: settings
 
     title: "meowdots settings"
-    width: 700
-    height: 450
+	implicitWidth: 700
+	implicitHeight: 450
     color: "transparent"
 
     property bool isPreview: false
