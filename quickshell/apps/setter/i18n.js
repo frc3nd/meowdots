@@ -2,7 +2,7 @@
 
 const translations = {
     ru: {
-        windowTitle: "настройки meowdots",
+        windowTitle: "настройки",
         main: "главная",
         console: "консоль",
         setter: "сеттер",

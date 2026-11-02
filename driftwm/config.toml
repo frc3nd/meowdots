@@ -182,7 +182,7 @@ animate_fps = 0
 [keybindings]
 "mod+q" = "exec-terminal"
 "mod+d" = "exec rofi -show drun"
-"mod+i" = "exec qs ipc call settings open"
+"mod+i" = "exec qs ipc call settings toggle"
 "mod+shift+o" = "exec qs ipc call modules toggle example.qml"
 "mod+c" = "close-window"
 "mod+shift+q" = "none"

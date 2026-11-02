@@ -11,7 +11,7 @@ FloatingWindow {
 
     signal closeRequested()
 
-    title: labelFor("windowTitle")
+    title: "meowdots — " + labelFor("windowTitle")
     implicitWidth: 820
     implicitHeight: 510
     color: "#1e1e2e"
@@ -68,6 +68,8 @@ FloatingWindow {
         if (visible) wasVisible = true
         else if (wasVisible) closeRequested()
     }
+
+    onClosed: closeRequested()
 
     State.SetterPreferences { id: preferences }
     Logs.LogReader { id: logger }

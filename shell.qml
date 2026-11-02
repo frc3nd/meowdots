@@ -92,8 +92,15 @@ ShellRoot {
         source: Qt.resolvedUrl("quickshell/apps/setter/setter.qml")
     }
 
+    LazyLoader {
+        id: driftwmFocus
+        active: root.wm === "driftwm"
+        source: Qt.resolvedUrl("driftwm/adapters/focus_setter.qml")
+    }
+
     function closeSettings(): void {
         if (!settingsLoader.active) return
+        if (driftwmFocus.item) driftwmFocus.item.cancel()
         settingsLoader.active = false
         console.log("[meowdots] setter | closed")
     }
@@ -110,11 +117,22 @@ ShellRoot {
         function open(): void {
             const wasOpen = settingsLoader.active
             settingsLoader.active = true
+            if (!settingsLoader.item) {
+                console.error("[meowdots] setter | failed to load")
+                settingsLoader.active = false
+                return
+            }
             settingsLoader.item.visible = true
+            if (driftwmFocus.item) driftwmFocus.item.focusSetter()
             if (!wasOpen) console.log("[meowdots] setter | opened")
         }
 
         function close(): void { root.closeSettings() }
+
+        function toggle(): void {
+            if (settingsLoader.active) root.closeSettings()
+            else open()
+        }
     }
 
     Component.onCompleted: console.log("[meowdots] root | wm: " + (wm || "unknown"))
