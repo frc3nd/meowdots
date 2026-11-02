@@ -1,0 +1,18 @@
+{
+  "windowTitle": "settings",
+  "main": "main",
+  "console": "console",
+  "setter": "setter",
+  "mainHint": "desktop and theme settings will appear here",
+  "logsTitle": "quickshell logs",
+  "logsWaiting": "waiting for logs…",
+  "appearanceTitle": "setter interface",
+  "languageTitle": "language",
+  "animationsTitle": "animations",
+  "animationsAll": "all animations",
+  "animationsTabs": "tab transitions",
+  "animationsSwitches": "switches",
+  "animationsContent": "content transitions",
+  "collapseSidebar": "collapse menu",
+  "expandSidebar": "expand menu"
+}

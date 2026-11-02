@@ -4,7 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import "../../services/logger" as Logs
 import "../../services/state" as State
-import "i18n.js" as I18n
+import "." as Setter
 
 FloatingWindow {
     id: settings
@@ -16,7 +16,6 @@ FloatingWindow {
     implicitHeight: 510
     color: "#1e1e2e"
 
-    property string language: "ru"
     property string currentTab: "main"
     property bool wasVisible: false
 
@@ -28,6 +27,7 @@ FloatingWindow {
 
     readonly property real tabHeight: 38
     readonly property real tabSpacing: 6
+    readonly property bool sidebarMotion: preferences.animations && preferences.tabs
     readonly property bool tabMotion: preferences.animations && preferences.tabs
     readonly property bool topTabActive: currentTab === "main"
     readonly property real targetIndicatorY: topTabActive
@@ -36,7 +36,7 @@ FloatingWindow {
     readonly property real gapCenter: (topTabs.y + topTabs.height + bottomTabs.y) / 2
 
     function labelFor(key: string): string {
-        return I18n.text(language, key)
+        return localization.text(key)
     }
 
     function selectTab(key: string): void {
@@ -72,6 +72,7 @@ FloatingWindow {
     onClosed: closeRequested()
 
     State.SetterPreferences { id: preferences }
+    Setter.Localization { id: localization; language: preferences.language }
     Logs.LogReader { id: logger }
 
     ParallelAnimation {
@@ -116,9 +117,14 @@ FloatingWindow {
 
         Rectangle {
             id: sidebar
-            Layout.preferredWidth: 190
+            property real sidebarWidth: preferences.sidebarExpanded ? 190 : 56
+            Layout.preferredWidth: sidebarWidth
             Layout.fillHeight: true
             color: "#181825"
+            Behavior on sidebarWidth {
+                enabled: settings.sidebarMotion
+                NumberAnimation { duration: 200; easing.type: Easing.InOutCubic }
+            }
 
             onHeightChanged: {
                 if (!sameZoneMove.running && !crossZoneMove.running)
@@ -134,14 +140,42 @@ FloatingWindow {
                 color: "#cdd6f4"
                 font.bold: true
                 font.pixelSize: 17
+                visible: preferences.sidebarExpanded
+            }
+
+            Rectangle {
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.top: parent.top
+                anchors.topMargin: 12
+                width: 32
+                height: 32
+                radius: settings.innerRadius
+                color: "#313244"
+                z: 2
+
+                Text {
+                    anchors.centerIn: parent
+                    text: preferences.sidebarExpanded ? "‹" : "›"
+                    color: "#cdd6f4"
+                    font.pixelSize: 22
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    ToolTip.visible: containsMouse
+                    ToolTip.text: settings.labelFor(preferences.sidebarExpanded ? "collapseSidebar" : "expandSidebar")
+                    onClicked: preferences.sidebarExpanded = !preferences.sidebarExpanded
+                }
             }
 
             Rectangle {
                 id: indicator
-                x: 12
+                x: preferences.sidebarExpanded ? 12 : 8
                 y: topTabs.y
                 z: 0
-                width: sidebar.width - 24
+                width: sidebar.width - (preferences.sidebarExpanded ? 24 : 16)
                 height: settings.tabHeight
                 radius: settings.innerRadius
                 color: "#313244"
@@ -149,10 +183,10 @@ FloatingWindow {
 
             Column {
                 id: topTabs
-                x: 12
+                x: preferences.sidebarExpanded ? 12 : 8
                 y: 62
                 z: 1
-                width: sidebar.width - 24
+                width: sidebar.width - (preferences.sidebarExpanded ? 24 : 16)
                 spacing: settings.tabSpacing
 
                 SidebarTab { tab: "main"; labelKey: "main" }
@@ -160,10 +194,10 @@ FloatingWindow {
 
             Column {
                 id: bottomTabs
-                x: 12
+                x: preferences.sidebarExpanded ? 12 : 8
                 y: sidebar.height - height - 12
                 z: 1
-                width: sidebar.width - 24
+                width: sidebar.width - (preferences.sidebarExpanded ? 24 : 16)
                 spacing: settings.tabSpacing
 
                 SidebarTab { tab: "console"; labelKey: "console" }
@@ -262,6 +296,27 @@ FloatingWindow {
                     }
 
                     Text {
+                        text: settings.labelFor("languageTitle")
+                        color: "#a6adc8"
+                        Layout.topMargin: 12
+                    }
+
+                    ComboBox {
+                        id: languagePicker
+                        Layout.preferredWidth: 180
+                        model: localization.languages
+                        textRole: "fileBaseName"
+                        valueRole: "fileBaseName"
+                        currentIndex: {
+                            for (let index = 0; index < count; index++) {
+                                if (valueAt(index) === preferences.language) return index
+                            }
+                            return -1
+                        }
+                        onActivated: preferences.language = currentValue
+                    }
+
+                    Text {
                         text: settings.labelFor("animationsTitle")
                         color: "#a6adc8"
                         Layout.topMargin: 12
@@ -318,10 +373,14 @@ FloatingWindow {
         Text {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 12
-            text: settings.labelFor(labelKey)
+            anchors.leftMargin: preferences.sidebarExpanded ? 12 : 0
+            width: preferences.sidebarExpanded ? parent.width - 12 : parent.width
+            horizontalAlignment: preferences.sidebarExpanded ? Text.AlignLeft : Text.AlignHCenter
+            text: preferences.sidebarExpanded ? settings.labelFor(labelKey)
+                : (tab === "main" ? "⌂" : tab === "console" ? ">_" : "⚙")
             color: settings.currentTab === tab ? "#cba6f7" : "#a6adc8"
             font.bold: settings.currentTab === tab
+            elide: Text.ElideRight
             Behavior on color {
                 enabled: preferences.animations && preferences.tabs
                 ColorAnimation { duration: 180 }
@@ -330,6 +389,9 @@ FloatingWindow {
 
         MouseArea {
             anchors.fill: parent
+            hoverEnabled: !preferences.sidebarExpanded
+            ToolTip.visible: containsMouse && !preferences.sidebarExpanded
+            ToolTip.text: settings.labelFor(labelKey)
             onClicked: settings.selectTab(tab)
         }
     }

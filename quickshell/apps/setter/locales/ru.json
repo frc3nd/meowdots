@@ -1,0 +1,18 @@
+{
+  "windowTitle": "настройки",
+  "main": "главная",
+  "console": "консоль",
+  "setter": "сеттер",
+  "mainHint": "настройки окружения и темы появятся здесь",
+  "logsTitle": "логи quickshell",
+  "logsWaiting": "ожидание логов…",
+  "appearanceTitle": "интерфейс сеттера",
+  "languageTitle": "язык",
+  "animationsTitle": "анимации",
+  "animationsAll": "все анимации",
+  "animationsTabs": "переходы между вкладками",
+  "animationsSwitches": "переключатели",
+  "animationsContent": "появление содержимого",
+  "collapseSidebar": "свернуть меню",
+  "expandSidebar": "развернуть меню"
+}
