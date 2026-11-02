@@ -538,3 +538,12 @@ mode = "preferred"
 # # [[window_rules]]
 # # app_id  = "Alacritty"
 # # opacity = 0.9
+
+# Match the 2×2 layout on HDMI-A-1 (2560×1440) with the current window gaps.
+[[window_rules]]
+app_id = "kitty"
+size = [1261, 704]
+
+[[window_rules]]
+title = "meowdots — *"
+size = [1261, 704]
