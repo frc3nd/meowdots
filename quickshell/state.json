@@ -1,5 +1,6 @@
 {
   "global_theme": "default",
+  "language": "ru",
 
   "driftwm": {
     "theme_override": null,

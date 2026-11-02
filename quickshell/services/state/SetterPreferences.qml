@@ -9,7 +9,6 @@ Scope {
     property bool switches: true
     property bool content: true
     property bool sidebarExpanded: true
-    property string language: "ru"
     property bool ready: false
 
     FileView {
@@ -44,8 +43,6 @@ Scope {
             switches = data.switches !== false
             content = data.content !== false
             sidebarExpanded = data.sidebarExpanded !== false
-            language = typeof data.language === "string" && /^[a-zA-Z0-9_-]+$/.test(data.language)
-                ? data.language : "ru"
         } catch (error) {
             console.warn("[meowdots] setter | invalid preferences: " + error)
         }
@@ -54,7 +51,7 @@ Scope {
 
     function save(): void {
         if (!ready) return
-        file.setText(JSON.stringify({ animations, tabs, switches, content, sidebarExpanded, language }, null, 2) + "\n")
+        file.setText(JSON.stringify({ animations, tabs, switches, content, sidebarExpanded }, null, 2) + "\n")
     }
 
     onAnimationsChanged: save()
@@ -62,5 +59,4 @@ Scope {
     onSwitchesChanged: save()
     onContentChanged: save()
     onSidebarExpandedChanged: save()
-    onLanguageChanged: save()
 }

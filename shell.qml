@@ -14,6 +14,7 @@ ShellRoot {
         blockLoading: true
         watchChanges: true
         onFileChanged: reload()
+        onSaveFailed: error => console.warn("[meowdots] root | cannot save state.json: " + error)
     }
 
     readonly property var state: {
@@ -23,6 +24,16 @@ ShellRoot {
             console.warn("[meowdots] root | cannot read state.json: " + error)
             return {}
         }
+    }
+
+    readonly property string language: typeof state.language === "string"
+        && /^[a-zA-Z0-9_-]+$/.test(state.language) ? state.language : "ru"
+
+    function setLanguage(language: string): void {
+        if (language === root.language || !/^[a-zA-Z0-9_-]+$/.test(language)) return
+        const updated = Object.assign({}, root.state)
+        updated.language = language
+        stateFile.setText(JSON.stringify(updated, null, 2) + "\n")
     }
 
     readonly property var enabledModules: {
@@ -92,6 +103,13 @@ ShellRoot {
         source: Qt.resolvedUrl("quickshell/apps/setter/setter.qml")
     }
 
+    Binding {
+        target: settingsLoader.item
+        property: "language"
+        value: root.language
+        when: settingsLoader.item !== null
+    }
+
     function closeSettings(): void {
         if (!settingsLoader.active) return
         settingsLoader.active = false
@@ -102,6 +120,7 @@ ShellRoot {
         target: settingsLoader.item
 
         function onCloseRequested() { root.closeSettings() }
+        function onLanguageSelected(language) { root.setLanguage(language) }
     }
 
     IpcHandler {
@@ -120,6 +139,8 @@ ShellRoot {
         }
 
         function close(): void { root.closeSettings() }
+
+        function setLanguage(language: string): void { root.setLanguage(language) }
 
         function toggle(): void {
             if (settingsLoader.active) root.closeSettings()

@@ -10,12 +10,14 @@ FloatingWindow {
     id: settings
 
     signal closeRequested()
+    signal languageSelected(string language)
 
     title: "meowdots — " + labelFor("windowTitle")
     implicitWidth: 820
     implicitHeight: 510
     color: "#1e1e2e"
 
+    property string language: "ru"
     property string currentTab: "main"
     property bool wasVisible: false
 
@@ -72,7 +74,7 @@ FloatingWindow {
     onClosed: closeRequested()
 
     State.SetterPreferences { id: preferences }
-    Setter.Localization { id: localization; language: preferences.language }
+    Setter.Localization { id: localization; language: settings.language }
     Logs.LogReader { id: logger }
 
     ParallelAnimation {
@@ -209,6 +211,45 @@ FloatingWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            RowLayout {
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.margins: 16
+                spacing: 8
+                z: 2
+
+                Text {
+                    text: settings.labelFor("languageTitle")
+                    color: "#a6adc8"
+                }
+
+                ComboBox {
+                    id: languagePicker
+                    Layout.preferredWidth: 120
+                    model: localization.languages
+                    textRole: "fileBaseName"
+                    valueRole: "fileBaseName"
+                    currentIndex: {
+                        for (let index = 0; index < count; index++) {
+                            if (valueAt(index) === settings.language) return index
+                        }
+                        return -1
+                    }
+                    onActivated: settings.languageSelected(currentValue)
+
+                    contentItem: Text {
+                        leftPadding: 12
+                        verticalAlignment: Text.AlignVCenter
+                        text: languagePicker.displayText
+                        color: "#cdd6f4"
+                    }
+                    background: Rectangle {
+                        color: "#313244"
+                        radius: settings.innerRadius
+                    }
+                }
+            }
+
             Item {
                 anchors.fill: parent
                 opacity: settings.currentTab === "main" ? 1 : 0
@@ -293,27 +334,6 @@ FloatingWindow {
                         color: "#cdd6f4"
                         font.bold: true
                         font.pixelSize: 18
-                    }
-
-                    Text {
-                        text: settings.labelFor("languageTitle")
-                        color: "#a6adc8"
-                        Layout.topMargin: 12
-                    }
-
-                    ComboBox {
-                        id: languagePicker
-                        Layout.preferredWidth: 180
-                        model: localization.languages
-                        textRole: "fileBaseName"
-                        valueRole: "fileBaseName"
-                        currentIndex: {
-                            for (let index = 0; index < count; index++) {
-                                if (valueAt(index) === preferences.language) return index
-                            }
-                            return -1
-                        }
-                        onActivated: preferences.language = currentValue
                     }
 
                     Text {
