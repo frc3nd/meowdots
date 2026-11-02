@@ -89,7 +89,7 @@ ShellRoot {
 
     LazyLoader {
         id: settingsLoader
-        source: Qt.resolvedUrl("quickshell/services/settings/shell.qml")
+        source: Qt.resolvedUrl("quickshell/apps/setter/setter.qml")
     }
 
     function closeSettings(): void {

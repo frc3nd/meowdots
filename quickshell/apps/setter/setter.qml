@@ -2,7 +2,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import "../logger" as Logs
+import "../../services/logger" as Logs
 
 FloatingWindow {
     id: settings
