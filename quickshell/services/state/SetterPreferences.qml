@@ -6,6 +6,7 @@ Scope {
 
     property bool animations: true
     property bool tabs: true
+    property bool sidebar: true
     property bool switches: true
     property bool content: true
     property bool sidebarExpanded: true
@@ -40,6 +41,7 @@ Scope {
             ready = false
             animations = data.animations !== false
             tabs = data.tabs !== false
+            sidebar = data.sidebar !== false
             switches = data.switches !== false
             content = data.content !== false
             sidebarExpanded = data.sidebarExpanded !== false
@@ -51,11 +53,12 @@ Scope {
 
     function save(): void {
         if (!ready) return
-        file.setText(JSON.stringify({ animations, tabs, switches, content, sidebarExpanded }, null, 2) + "\n")
+        file.setText(JSON.stringify({ animations, tabs, sidebar, switches, content, sidebarExpanded }, null, 2) + "\n")
     }
 
     onAnimationsChanged: save()
     onTabsChanged: save()
+    onSidebarChanged: save()
     onSwitchesChanged: save()
     onContentChanged: save()
     onSidebarExpandedChanged: save()

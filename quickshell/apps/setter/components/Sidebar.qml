@@ -9,6 +9,7 @@ Rectangle {
     required property string currentTab
     required property bool expanded
     required property bool animateTabs
+    required property bool animateSidebar
     required property bool animationReady
     required property real cornerRadius
     required property var labelFor
@@ -16,7 +17,9 @@ Rectangle {
     signal tabSelected(string tab)
     signal expansionToggled()
 
-    property real sidebarWidth: expanded ? 190 : 56
+    property bool visualExpanded: expanded
+    property bool labelsExpanded: expanded
+    property real sidebarWidth: visualExpanded ? 190 : 56
     property string previousTab: "main"
     property bool motionReady: false
     property bool animateExpansion: false
@@ -31,8 +34,43 @@ Rectangle {
     color: "#181825"
 
     Behavior on sidebarWidth {
-        enabled: sidebar.animateExpansion && sidebar.animationReady && sidebar.animateTabs
+        enabled: sidebar.animateExpansion && sidebar.animationReady && sidebar.animateSidebar
         NumberAnimation { duration: 200; easing.type: Easing.InOutCubic }
+    }
+
+    onExpandedChanged: {
+        openLabels.stop()
+        closeSidebar.stop()
+        if (!animateExpansion || !animationReady || !animateSidebar) {
+            visualExpanded = expanded
+            labelsExpanded = expanded
+        } else if (expanded) {
+            visualExpanded = true
+            openLabels.start()
+        } else {
+            labelsExpanded = false
+            closeSidebar.start()
+        }
+    }
+
+    onAnimateSidebarChanged: {
+        if (animateSidebar) return
+        openLabels.stop()
+        closeSidebar.stop()
+        visualExpanded = expanded
+        labelsExpanded = expanded
+    }
+
+    Timer {
+        id: openLabels
+        interval: 200
+        onTriggered: sidebar.labelsExpanded = true
+    }
+
+    Timer {
+        id: closeSidebar
+        interval: 260
+        onTriggered: sidebar.visualExpanded = false
     }
 
     // Wait one event loop after preferences load so the saved width is applied without animation.
@@ -123,7 +161,7 @@ Rectangle {
         color: "#cdd6f4"
         font.bold: true
         font.pixelSize: 17
-        visible: sidebar.expanded
+        visible: sidebar.visualExpanded
     }
 
     Rectangle {
@@ -154,19 +192,19 @@ Rectangle {
 
     Ui.TabIndicator {
         id: indicator
-        x: sidebar.expanded ? 12 : 8
+        x: sidebar.visualExpanded ? 12 : 8
         y: topTabs.y
-        width: sidebar.width - (sidebar.expanded ? 24 : 16)
+        width: sidebar.width - (sidebar.visualExpanded ? 24 : 16)
         height: sidebar.tabHeight
         cornerRadius: sidebar.cornerRadius
     }
 
     Column {
         id: topTabs
-        x: sidebar.expanded ? 12 : 8
+        x: sidebar.visualExpanded ? 12 : 8
         y: 62
         z: 1
-        width: sidebar.width - (sidebar.expanded ? 24 : 16)
+        width: sidebar.width - (sidebar.visualExpanded ? 24 : 16)
         spacing: sidebar.tabSpacing
 
         Ui.TabButton {
@@ -174,7 +212,9 @@ Rectangle {
             tab: "main"
             label: sidebar.labelFor("main")
             selected: sidebar.currentTab === tab
-            expanded: sidebar.expanded
+            expanded: sidebar.visualExpanded
+            revealText: sidebar.labelsExpanded
+            animateText: sidebar.animateSidebar && sidebar.animationReady && sidebar.animateExpansion
             animate: sidebar.animateTabs
             onClicked: sidebar.tabSelected(tab)
         }
@@ -182,10 +222,10 @@ Rectangle {
 
     Column {
         id: bottomTabs
-        x: sidebar.expanded ? 12 : 8
+        x: sidebar.visualExpanded ? 12 : 8
         y: sidebar.height - height - 12
         z: 1
-        width: sidebar.width - (sidebar.expanded ? 24 : 16)
+        width: sidebar.width - (sidebar.visualExpanded ? 24 : 16)
         spacing: sidebar.tabSpacing
 
         Ui.TabButton {
@@ -193,7 +233,9 @@ Rectangle {
             tab: "console"
             label: sidebar.labelFor("console")
             selected: sidebar.currentTab === tab
-            expanded: sidebar.expanded
+            expanded: sidebar.visualExpanded
+            revealText: sidebar.labelsExpanded
+            animateText: sidebar.animateSidebar && sidebar.animationReady && sidebar.animateExpansion
             animate: sidebar.animateTabs
             onClicked: sidebar.tabSelected(tab)
         }
@@ -202,7 +244,9 @@ Rectangle {
             tab: "setter"
             label: sidebar.labelFor("setter")
             selected: sidebar.currentTab === tab
-            expanded: sidebar.expanded
+            expanded: sidebar.visualExpanded
+            revealText: sidebar.labelsExpanded
+            animateText: sidebar.animateSidebar && sidebar.animationReady && sidebar.animateExpansion
             animate: sidebar.animateTabs
             onClicked: sidebar.tabSelected(tab)
         }

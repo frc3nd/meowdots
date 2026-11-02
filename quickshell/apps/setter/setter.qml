@@ -52,6 +52,7 @@ FloatingWindow {
             currentTab: settings.currentTab
             expanded: preferences.sidebarExpanded
             animateTabs: preferences.animations && preferences.tabs
+            animateSidebar: preferences.animations && preferences.sidebar
             animationReady: preferences.ready
             cornerRadius: settings.innerRadius
             labelFor: settings.labelFor
@@ -187,6 +188,12 @@ FloatingWindow {
                                 checked: preferences.tabs
                                 animate: preferences.animations && preferences.switches
                                 onToggled: preferences.tabs = !preferences.tabs
+                            }
+                            Ui.SettingSwitch {
+                                label: settings.labelFor("animationsSidebar")
+                                checked: preferences.sidebar
+                                animate: preferences.animations && preferences.switches
+                                onToggled: preferences.sidebar = !preferences.sidebar
                             }
                             Ui.SettingSwitch {
                                 label: settings.labelFor("animationsSwitches")
