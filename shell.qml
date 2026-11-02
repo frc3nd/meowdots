@@ -28,6 +28,8 @@ ShellRoot {
 
     readonly property string language: typeof state.language === "string"
         && /^[a-zA-Z0-9_-]+$/.test(state.language) ? state.language : "ru"
+    readonly property string globalTheme: typeof state.global_theme === "string"
+        && /^[a-z0-9_-]+$/.test(state.global_theme) ? state.global_theme : "default"
 
     function setLanguage(language: string): void {
         if (language === root.language || !/^[a-zA-Z0-9_-]+$/.test(language)) return
@@ -107,6 +109,13 @@ ShellRoot {
         target: settingsLoader.item
         property: "language"
         value: root.language
+        when: settingsLoader.item !== null
+    }
+
+    Binding {
+        target: settingsLoader.item
+        property: "themeName"
+        value: root.globalTheme
         when: settingsLoader.item !== null
     }
 

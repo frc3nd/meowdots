@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import "../../services/logger" as Logs
 import "../../services/state" as State
+import "../../services/theme" as Themes
 import "." as Setter
 import "components" as Ui
 
@@ -19,12 +20,13 @@ FloatingWindow {
     color: "#1e1e2e"
 
     property string language: "ru"
+    property string themeName: "default"
     property string currentTab: "main"
     property bool wasVisible: false
 
     // DriftWM rounds the outer window itself. Keep this separate for other WMs.
-    property real windowRadius: 12
-    property real elementRadius: 12
+    property real windowRadius: theme.cornerRadius
+    property real elementRadius: theme.cornerRadius
     property bool separateRadii: true
     readonly property real innerRadius: separateRadii ? elementRadius : windowRadius
 
@@ -40,6 +42,7 @@ FloatingWindow {
     onClosed: closeRequested()
 
     State.SetterPreferences { id: preferences }
+    Themes.Theme { id: theme; themeName: settings.themeName }
     Setter.Localization { id: localization; language: settings.language }
     Logs.LogReader { id: logger }
 
