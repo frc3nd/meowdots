@@ -1,4 +1,5 @@
 {
   "theme": "default",
-  "animations": true
+  "animations": true,
+  "transparency": true
 }
