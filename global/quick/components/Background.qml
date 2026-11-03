@@ -1,14 +1,28 @@
 import QtQuick
 
 Rectangle {
-    property bool animationsEnabled: true
+    id: root
 
-    color: "#e61e1e2e"
+    property bool animationsEnabled: true
+    property bool transparencyEnabled: true
+    property real animationSpeed: 1
+    property real surfaceOpacity: 0.9
+
+    color: "#1e1e2e"
+    opacity: transparencyEnabled ? surfaceOpacity : 1
 
     Behavior on color {
-        enabled: animationsEnabled
+        enabled: root.animationsEnabled
         ColorAnimation {
-            duration: 400
+            duration: 400 / Math.max(root.animationSpeed, 0.1)
+            easing.type: Easing.InOutCubic
+        }
+    }
+
+    Behavior on opacity {
+        enabled: root.animationsEnabled
+        NumberAnimation {
+            duration: 400 / Math.max(root.animationSpeed, 0.1)
             easing.type: Easing.InOutCubic
         }
     }

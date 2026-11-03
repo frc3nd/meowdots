@@ -5,6 +5,7 @@ Rectangle {
 
     property bool checked: false
     property bool animationsEnabled: true
+    property real animationSpeed: 1
 
     implicitWidth: 52
     implicitHeight: 32
@@ -15,7 +16,7 @@ Rectangle {
 
     Behavior on color {
         enabled: root.animationsEnabled
-        ColorAnimation { duration: 180 }
+        ColorAnimation { duration: 180 / Math.max(root.animationSpeed, 0.1) }
     }
 
     Rectangle {
@@ -30,15 +31,15 @@ Rectangle {
 
         Behavior on width {
             enabled: root.animationsEnabled
-            NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+            NumberAnimation { duration: 180 / Math.max(root.animationSpeed, 0.1); easing.type: Easing.OutCubic }
         }
         Behavior on x {
             enabled: root.animationsEnabled
-            NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+            NumberAnimation { duration: 180 / Math.max(root.animationSpeed, 0.1); easing.type: Easing.OutCubic }
         }
         Behavior on color {
             enabled: root.animationsEnabled
-            ColorAnimation { duration: 180 }
+            ColorAnimation { duration: 180 / Math.max(root.animationSpeed, 0.1) }
         }
     }
 
