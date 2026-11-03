@@ -1,15 +1,11 @@
 {
   "global_theme": "default",
   "language": "ru",
-
   "driftwm": {
     "theme_override": null,
     "enabled_modules": [
       "example.qml"
     ]
   },
-
-  "hyprland": {
-
-  }
+  "hyprland": {}
 }
