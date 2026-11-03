@@ -10,6 +10,7 @@ Scope {
     property bool switches: true
     property bool content: true
     property bool sidebarExpanded: true
+    property string currentTab: "main"
     property bool ready: false
 
     FileView {
@@ -45,6 +46,7 @@ Scope {
             switches = data.switches !== false
             content = data.content !== false
             sidebarExpanded = data.sidebarExpanded !== false
+            currentTab = ["main", "console", "setter"].includes(data.currentTab) ? data.currentTab : "main"
         } catch (error) {
             console.warn("[meowdots] setter | invalid preferences: " + error)
         }
@@ -53,7 +55,7 @@ Scope {
 
     function save(): void {
         if (!ready) return
-        file.setText(JSON.stringify({ animations, tabs, sidebar, switches, content, sidebarExpanded }, null, 2) + "\n")
+        file.setText(JSON.stringify({ animations, tabs, sidebar, switches, content, sidebarExpanded, currentTab }, null, 2) + "\n")
     }
 
     onAnimationsChanged: save()
@@ -62,4 +64,5 @@ Scope {
     onSwitchesChanged: save()
     onContentChanged: save()
     onSidebarExpandedChanged: save()
+    onCurrentTabChanged: save()
 }
