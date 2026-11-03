@@ -1,6 +1,8 @@
 {
   "windowTitle": "settings",
   "main": "main",
+  "desktopTitle": "desktop",
+  "desktopConfig": "config:",
   "console": "console",
   "setter": "setter",
   "mainHint": "desktop and theme settings will appear here",

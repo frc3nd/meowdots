@@ -119,6 +119,13 @@ ShellRoot {
         when: settingsLoader.item !== null
     }
 
+    Binding {
+        target: settingsLoader.item
+        property: "currentDesktop"
+        value: root.wm
+        when: settingsLoader.item !== null
+    }
+
     function closeSettings(): void {
         if (!settingsLoader.active) return
         settingsLoader.active = false

@@ -1,6 +1,8 @@
 {
   "windowTitle": "настройки",
   "main": "главная",
+  "desktopTitle": "десктоп",
+  "desktopConfig": "конфиг:",
   "console": "консоль",
   "setter": "сеттер",
   "mainHint": "настройки окружения и темы появятся здесь",

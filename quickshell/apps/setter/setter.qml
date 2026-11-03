@@ -21,7 +21,10 @@ FloatingWindow {
 
     property string language: "ru"
     property string themeName: "default"
-    property string currentTab: "main"
+    property string currentDesktop: (Quickshell.env("XDG_CURRENT_DESKTOP") || "")
+        .split(":")[0].toLowerCase()
+    property string selectedDesktop: currentDesktop
+    readonly property string currentTab: preferences.currentTab
     property bool wasVisible: false
 
     // DriftWM rounds the outer window itself. Keep this separate for other WMs.
@@ -54,12 +57,12 @@ FloatingWindow {
             id: sidebar
             currentTab: settings.currentTab
             expanded: preferences.sidebarExpanded
-            animateTabs: preferences.animations && preferences.tabs
+            animateTabs: preferences.ready && preferences.animations && preferences.tabs
             animateSidebar: preferences.animations && preferences.sidebar
             animationReady: preferences.ready
             cornerRadius: settings.innerRadius
             labelFor: settings.labelFor
-            onTabSelected: tab => settings.currentTab = tab
+            onTabSelected: tab => preferences.currentTab = tab
             onExpansionToggled: preferences.sidebarExpanded = !preferences.sidebarExpanded
         }
 
@@ -70,12 +73,23 @@ FloatingWindow {
             Item {
                 anchors.fill: parent
                 opacity: settings.currentTab === "main" ? 1 : 0
-                visible: opacity > 0
-                enabled: settings.currentTab === "main"
+                visible: preferences.ready && opacity > 0
+                enabled: preferences.ready && settings.currentTab === "main"
                 z: enabled ? 1 : 0
                 Behavior on opacity {
-                    enabled: preferences.animations && preferences.content
+                    enabled: preferences.ready && preferences.animations && preferences.content
                     NumberAnimation { duration: 180 }
+                }
+
+                Ui.DesktopPicker {
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    desktop: settings.selectedDesktop
+                    label: settings.labelFor("desktopTitle")
+                    configLabel: settings.labelFor("desktopConfig")
+                    cornerRadius: settings.innerRadius
+                    onDesktopSelected: desktop => settings.selectedDesktop = desktop
                 }
 
                 Text {
@@ -88,11 +102,11 @@ FloatingWindow {
             Item {
                 anchors.fill: parent
                 opacity: settings.currentTab === "console" ? 1 : 0
-                visible: opacity > 0
-                enabled: settings.currentTab === "console"
+                visible: preferences.ready && opacity > 0
+                enabled: preferences.ready && settings.currentTab === "console"
                 z: enabled ? 1 : 0
                 Behavior on opacity {
-                    enabled: preferences.animations && preferences.content
+                    enabled: preferences.ready && preferences.animations && preferences.content
                     NumberAnimation { duration: 180 }
                 }
 
@@ -133,11 +147,11 @@ FloatingWindow {
             Item {
                 anchors.fill: parent
                 opacity: settings.currentTab === "setter" ? 1 : 0
-                visible: opacity > 0
-                enabled: settings.currentTab === "setter"
+                visible: preferences.ready && opacity > 0
+                enabled: preferences.ready && settings.currentTab === "setter"
                 z: enabled ? 1 : 0
                 Behavior on opacity {
-                    enabled: preferences.animations && preferences.content
+                    enabled: preferences.ready && preferences.animations && preferences.content
                     NumberAnimation { duration: 180 }
                 }
 
