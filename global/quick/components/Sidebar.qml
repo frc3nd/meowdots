@@ -5,6 +5,7 @@ Rectangle {
 
     property var tabs: []
     property string currentTab: ""
+    property var labelFor: key => key
     signal tabSelected(string tab)
 
     color: "#282838"
@@ -27,7 +28,7 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: modelData
+                    text: root.labelFor(modelData)
                     color: "white"
                 }
 

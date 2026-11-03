@@ -1,12 +1,20 @@
 import QtQuick
 import QtQuick.Layouts
 import "../../components" as Ui
+import "../../services" as Services
 
 Item {
     id: root
 
     required property string desktopName
+    property string language: "ru"
     property string currentTab: ""
+
+    Services.Localization {
+        id: localization
+        localesDir: Qt.resolvedUrl("locales")
+        language: root.language
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -17,6 +25,7 @@ Item {
             Layout.fillHeight: true
             tabs: desktopPage.item ? desktopPage.item.tabs : []
             currentTab: root.currentTab
+            labelFor: key => localization.text(key)
             onTabSelected: tab => root.currentTab = tab
         }
 
@@ -43,7 +52,8 @@ Item {
             Text {
                 anchors.centerIn: parent
                 visible: !desktopPage.item && root.desktopName !== "driftwm"
-                text: "нет интерфейса настроек для " + (root.desktopName || "этого десктопа")
+                text: localization.text("unsupportedDesktop")
+                    .replace("%1", root.desktopName || "?")
                 color: "white"
             }
         }
