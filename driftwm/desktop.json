@@ -1,0 +1,7 @@
+{
+  "id": "driftwm",
+  "settings": {
+    "view": "quick/driftwm.qml",
+    "adapter": "quick/adapter.null"
+  }
+}

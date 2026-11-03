@@ -1,0 +1,6 @@
+{
+  "windowTitle": "settings",
+  "main": "main",
+  "appearance": "appearance",
+  "unsupportedDesktop": "no settings interface for %1"
+}

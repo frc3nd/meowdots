@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=meowdots settings
+Exec=qs ipc call settings open
+Icon=preferences-system
+Terminal=false
+Categories=Settings;
