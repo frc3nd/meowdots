@@ -54,5 +54,6 @@ ShellRoot {
     IpcHandler {
         target: "settings"
         function open() { settingsLoader.active = true }
+        function toggle() { settingsLoader.active = !settingsLoader.active }
     }
 }
