@@ -1,6 +1,6 @@
 {
   "windowTitle": "settings",
-  "главная": "main",
-  "оформление": "appearance",
+  "main": "main",
+  "appearance": "appearance",
   "unsupportedDesktop": "no settings interface for %1"
 }

@@ -1,3 +1,4 @@
+import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "../../components" as Ui
@@ -9,6 +10,41 @@ Item {
     required property string desktopName
     property string language: "ru"
     property string currentTab: ""
+
+    FileView {
+        id: mapFile
+        path: Qt.resolvedUrl("map.json")
+        blockLoading: true
+        printErrors: false
+        watchChanges: true
+        onFileChanged: reload()
+    }
+
+    readonly property var registry: {
+        try { return JSON.parse(mapFile.text()) }
+        catch (error) { return {} }
+    }
+    readonly property string desktopPath: registry.desktops
+        && typeof registry.desktops[desktopName] === "string"
+        ? registry.desktops[desktopName] : ""
+
+    FileView {
+        id: desktopFile
+        path: root.desktopPath ? Qt.resolvedUrl(root.desktopPath) : ""
+        blockLoading: true
+        printErrors: false
+        watchChanges: true
+        onFileChanged: reload()
+    }
+
+    readonly property var descriptor: {
+        try { return JSON.parse(desktopFile.text()) }
+        catch (error) { return {} }
+    }
+    readonly property string desktopView: descriptor && descriptor.id === desktopName
+        && descriptor.settings && typeof descriptor.settings.view === "string"
+        && /^quick\/[a-zA-Z0-9_/-]+\.qml$/.test(descriptor.settings.view)
+        ? descriptor.settings.view : ""
 
     Services.Localization {
         id: localization
@@ -36,8 +72,8 @@ Item {
             Loader {
                 id: desktopPage
                 anchors.fill: parent
-                source: root.desktopName === "driftwm"
-                    ? Qt.resolvedUrl("../../../../driftwm/quick/modules/settings/DriftwmSettings.qml")
+                source: root.desktopView
+                    ? Qt.resolvedUrl(root.desktopPath.substring(0, root.desktopPath.lastIndexOf("/") + 1) + root.desktopView)
                     : ""
                 onLoaded: root.currentTab = item.tabs[0] || ""
             }
@@ -51,7 +87,7 @@ Item {
 
             Text {
                 anchors.centerIn: parent
-                visible: !desktopPage.item && root.desktopName !== "driftwm"
+                visible: !desktopPage.item && desktopPage.status !== Loader.Loading
                 text: localization.text("unsupportedDesktop")
                     .replace("%1", root.desktopName || "?")
                 color: "white"
