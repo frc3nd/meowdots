@@ -1,6 +1,7 @@
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "global/quick/services" as Services
 
 ShellRoot {
     id: root
@@ -10,11 +11,16 @@ ShellRoot {
 
     Component.onCompleted: console.log("[meowdots] desktop:", desktopName)
 
+    Services.Appearance { id: appearance }
+
     Loader {
         id: settingsLoader
         active: false
         source: Qt.resolvedUrl("global/quick/modules/settings/app/app.qml")
-        onLoaded: item.desktopName = root.desktopName
+        onLoaded: {
+            item.desktopName = root.desktopName
+            item.appearance = appearance
+        }
     }
 
     Connections {
