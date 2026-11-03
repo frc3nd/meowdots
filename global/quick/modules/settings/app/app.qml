@@ -37,5 +37,6 @@ FloatingWindow {
         anchors.fill: parent
         desktopName: root.desktopName
         language: root.language
+        appearance: root.appearance
     }
 }

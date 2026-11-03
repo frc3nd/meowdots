@@ -9,6 +9,7 @@ Item {
 
     required property string desktopName
     property string language: "ru"
+    property var appearance: null
     property string currentTab: ""
 
     FileView {
@@ -57,11 +58,12 @@ Item {
         spacing: 0
 
         Ui.Sidebar {
-            Layout.preferredWidth: 190
             Layout.fillHeight: true
             tabs: desktopPage.item ? desktopPage.item.tabs : []
             currentTab: root.currentTab
             labelFor: key => localization.text(key)
+            animationsEnabled: root.appearance ? root.appearance.animationsEnabled : true
+            animationSpeed: root.appearance ? root.appearance.animationSpeed : 1
             onTabSelected: tab => root.currentTab = tab
         }
 
