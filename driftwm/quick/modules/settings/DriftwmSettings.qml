@@ -1,27 +1,14 @@
 import QtQuick
-import QtQuick.Layouts
-import "." as Parts
 
 Item {
     id: root
 
+    readonly property var tabs: ["главная", "оформление"]
     property string currentTab: "главная"
 
-    RowLayout {
-        anchors.fill: parent
-        spacing: 0
-
-        Parts.Sidebar {
-            Layout.preferredWidth: 190
-            Layout.fillHeight: true
-            currentTab: root.currentTab
-            onTabSelected: tab => root.currentTab = tab
-        }
-
-        Parts.TileCanvas {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            currentTab: root.currentTab
-        }
+    Text {
+        anchors.centerIn: parent
+        text: root.currentTab + " — настройки появятся здесь"
+        color: "white"
     }
 }

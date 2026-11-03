@@ -3,7 +3,8 @@ import QtQuick
 Rectangle {
     id: root
 
-    property string currentTab: "главная"
+    property var tabs: []
+    property string currentTab: ""
     signal tabSelected(string tab)
 
     color: "#282838"
@@ -14,7 +15,7 @@ Rectangle {
         spacing: 8
 
         Repeater {
-            model: ["главная", "оформление"]
+            model: root.tabs
 
             Rectangle {
                 required property string modelData
