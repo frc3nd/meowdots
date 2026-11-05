@@ -2,48 +2,48 @@
 
 ```text
 .
-├── shell.qml                              рут Quickshell: определяет WM, загружает сеттер по IPC
-├── global/
-│   ├── profiles/default/profile.json     тема default, эффекты и ui_scale_percent
-│   ├── themes/default/theme.json          скорость анимаций и прозрачность поверхностей
-│   └── quick/
-│       ├── state.json                     выбранный язык (пока ru)
-│       ├── components/
-│       │   ├── Background.qml             фон с плавной сменой цвета и прозрачности
-│       │   ├── Sidebar.qml                панель: верхние вкладки WM, нижние вкладки сеттера
-│       │   ├── SidebarBrand.qml           надпись meowdots над разделителем
-│       │   ├── SidebarTab.qml             пункт с иконкой и исчезающими по ширине буквами
-│       │   ├── SidebarHandle.qml          стрелка в капле для сворачивания панели
-│       │   ├── TileCanvas.qml             область содержимого настроек
-│       │   ├── Switch.qml                 простой переключатель
-│       │   ├── MaterialSwitch.qml         переключатель в стиле Material You
-│       │   └── selected.json              записанный выбор фона, пока не подключён к загрузке
-│       ├── services/
-│       │   ├── Appearance.qml             читает профиль и тему, отдаёт параметры компонентам
-│       │   └── Localization.qml           читает словарь модуля; fallback на русский
-│       └── modules/settings/
-│           ├── Setter.qml                 общая сборка панели, листа и страницы десктопа
-│           ├── map.json                   регистрация десктопов и путей к их desktop.json
-│           ├── locales/{ru,en}.json       переводы сеттера
-│           └── app/
-│               ├── app.qml                отдельное окно вокруг Setter.qml
-│               └── meowdots-settings.desktop  ярлык для IPC-открытия окна
-├── driftwm/
-│   ├── config.toml                         рабочий конфиг WM и хоткеи
-│   ├── desktop.json                        путь к странице и заготовке адаптера
-│   ├── quick/
-│   │   ├── driftwm.qml                     список вкладок DriftWM и временное содержимое
-│   │   └── adapter.null                    пустая заготовка адаптера конфигурации
-│   └── integrations/hyprlock/hyprlock.conf  конфиг блокировки экрана
-├── hyprland/hyprland.conf                 пустая заготовка
-├── .gitignore                             игнорируется только .tmp/
+├── driftwm
+│   ├── config.toml
+│   ├── desktop.json
+│   ├── integrations
+│   │   └── hyprlock
+│   │       └── hyprlock.conf
+│   └── quick
+│       ├── adapter.null
+│       ├── driftwm.qml
+│       └── modules
+├── global
+│   ├── profiles
+│   │   └── default
+│   │       └── profile.json
+│   ├── quick
+│   │   ├── components
+│   │   │   ├── Background.qml
+│   │   │   ├── MaterialSwitch.qml
+│   │   │   ├── selected.json
+│   │   │   ├── Sidebar.qml
+│   │   │   ├── Switch.qml
+│   │   │   └── TileCanvas.qml
+│   │   ├── modules
+│   │   │   └── settings
+│   │   │       ├── app
+│   │   │       │   ├── app.qml
+│   │   │       │   └── meowdots-settings.desktop
+│   │   │       ├── locales
+│   │   │       │   ├── en.json
+│   │   │       │   └── ru.json
+│   │   │       ├── map.json
+│   │   │       └── Setter.qml
+│   │   ├── services
+│   │   │   ├── Appearance.qml
+│   │   │   └── Localization.qml
+│   │   └── state.json
+│   └── themes
+│       └── default
+│           └── theme.json
+├── hyprland
+│   └── hyprland.conf
+├── LICENSE
 ├── README.md
-├── REFERENCE.md                           эта карта
-└── LICENSE
-```
-
-путь загрузки настроек: `shell.qml` → `app.qml` → `Setter.qml` → `map.json` → `driftwm/desktop.json` → `driftwm/quick/driftwm.qml`. адаптер пока не реализован; `desktop.json` только указывает на его заготовку. `selected.json` тоже пока не управляет выбором компонентов.
-
-`ui_scale_percent` в профиле задаёт масштаб элементов (100 — исходный размер); окно при этом не масштабируется. `Appearance.qml` преобразует проценты в коэффициент, который получают панель, переключатели и страница DriftWM. вкладки WM приходят из `driftwm.qml`; общие «сеттер» и «консоль» закреплены снизу и пока показывают заглушки. при сворачивании буквы исчезают вслед за сужающимся краем панели, а иконки остаются.
-
-`~/.config/quickshell` указывает на корень репозитория; `~/.config/hypr/hyprlock.conf` — на `driftwm/integrations/hyprlock/hyprlock.conf`. `.tmp/` содержит локальные файлы и не входит в git.
+├── REFERENCE.md
+└── shell.qml```
