@@ -2,5 +2,7 @@
   "windowTitle": "settings",
   "main": "main",
   "appearance": "appearance",
+  "settings": "setter settings",
+  "console": "console",
   "unsupportedDesktop": "no settings interface for %1"
 }

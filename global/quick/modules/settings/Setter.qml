@@ -60,9 +60,13 @@ Item {
 
         Ui.Sidebar {
             Layout.fillHeight: true
+            tabs: desktopPage.item ? desktopPage.item.tabs : []
+            currentTab: root.currentTab
+            labelFor: key => localization.text(key)
             animationsEnabled: root.appearance ? root.appearance.animationsEnabled : true
             animationSpeed: root.appearance ? root.appearance.animationSpeed : 1
             uiScale: root.uiScale
+            onTabSelected: tab => root.currentTab = tab
         }
 
         Ui.TileCanvas {
@@ -72,10 +76,11 @@ Item {
             Loader {
                 id: desktopPage
                 anchors.fill: parent
+                visible: root.currentTab !== "settings" && root.currentTab !== "console"
                 source: root.desktopView
                     ? Qt.resolvedUrl(root.desktopPath.substring(0, root.desktopPath.lastIndexOf("/") + 1) + root.desktopView)
                     : ""
-                onLoaded: root.currentTab = item.tabs[0] || ""
+                onLoaded: root.currentTab = item.tabs.length ? item.tabs[0].id : ""
             }
 
             Binding {
@@ -95,8 +100,17 @@ Item {
             Text {
                 anchors.centerIn: parent
                 visible: !desktopPage.item && desktopPage.status !== Loader.Loading
+                    && root.currentTab !== "settings" && root.currentTab !== "console"
                 text: localization.text("unsupportedDesktop")
                     .replace("%1", root.desktopName || "?")
+                color: "white"
+                font.pixelSize: 14 * root.uiScale
+            }
+
+            Text {
+                anchors.centerIn: parent
+                visible: root.currentTab === "settings" || root.currentTab === "console"
+                text: localization.text(root.currentTab)
                 color: "white"
                 font.pixelSize: 14 * root.uiScale
             }
