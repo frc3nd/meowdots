@@ -11,6 +11,7 @@ Item {
     property string language: "ru"
     property var appearance: null
     property string currentTab: ""
+    readonly property real uiScale: appearance ? appearance.uiScale : 1
 
     FileView {
         id: mapFile
@@ -59,12 +60,9 @@ Item {
 
         Ui.Sidebar {
             Layout.fillHeight: true
-            tabs: desktopPage.item ? desktopPage.item.tabs : []
-            currentTab: root.currentTab
-            labelFor: key => localization.text(key)
             animationsEnabled: root.appearance ? root.appearance.animationsEnabled : true
             animationSpeed: root.appearance ? root.appearance.animationSpeed : 1
-            onTabSelected: tab => root.currentTab = tab
+            uiScale: root.uiScale
         }
 
         Ui.TileCanvas {
@@ -87,12 +85,20 @@ Item {
                 when: desktopPage.item !== null
             }
 
+            Binding {
+                target: desktopPage.item
+                property: "uiScale"
+                value: root.uiScale
+                when: desktopPage.item !== null
+            }
+
             Text {
                 anchors.centerIn: parent
                 visible: !desktopPage.item && desktopPage.status !== Loader.Loading
                 text: localization.text("unsupportedDesktop")
                     .replace("%1", root.desktopName || "?")
                 color: "white"
+                font.pixelSize: 14 * root.uiScale
             }
         }
     }

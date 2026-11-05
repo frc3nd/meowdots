@@ -4,17 +4,18 @@ Rectangle {
     id: root
 
     property bool checked: false
+    property real uiScale: 1
 
-    implicitWidth: 40
-    implicitHeight: 22
+    implicitWidth: 40 * uiScale
+    implicitHeight: 22 * uiScale
     radius: height / 2
     color: checked ? "#888888" : "#444444"
 
     Rectangle {
-        width: 16
-        height: 16
+        width: 16 * root.uiScale
+        height: width
         radius: width / 2
-        x: root.checked ? root.width - width - 3 : 3
+        x: root.checked ? root.width - width - 3 * root.uiScale : 3 * root.uiScale
         anchors.verticalCenter: parent.verticalCenter
         color: "white"
     }

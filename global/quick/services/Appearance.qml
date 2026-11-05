@@ -38,6 +38,9 @@ Scope {
         ? profile.animations : true
     readonly property bool transparencyEnabled: typeof profile.transparency === "boolean"
         ? profile.transparency : true
+    readonly property real uiScale: typeof profile.ui_scale_percent === "number"
+        && isFinite(profile.ui_scale_percent)
+        ? Math.max(0.25, Math.min(4, profile.ui_scale_percent / 100)) : 1
     readonly property real animationSpeed: typeof theme.animation_speed === "number"
         && isFinite(theme.animation_speed) && theme.animation_speed > 0
         ? theme.animation_speed : 1
